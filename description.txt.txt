@@ -1,0 +1,11 @@
+Description:
+
+Aim: To achieve a good amount of accuracy using regression model.
+
+TO_DO:
+set up conda venv
+install related libraries
+set up github repo
+data preprocessing
+modelling
+test
