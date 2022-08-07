@@ -1,0 +1,19 @@
+Description:
+
+Aim: To predict housing prices using different models. Data taken from Kaggle
+
+Current models:
+
+Multiple Linear Regression (baseline)
+R-Squared: 0.512, RMSE: 58021
+
+Polynomial Regression
+Degree=2: R-Squared: 0.602, RMSE: 52376
+-Improvement over Multiple Linear Regression model, to run again on higher degrees
+
+Random Forest Regressor
+Estimators=100: R-Squared: 34433.355451263946, RMSE: 34433
+Estimators=150: R-Squared: 0.8333082841696381, RMSE: 33928.57173190168
+-Very clear improvement over previous models
+
+ANN (Artificial Neural Network):

@@ -2,12 +2,7 @@
 import pandas as pd
 import numpy as np
 
-#data preprocessing
-data = pd.read_csv("train.csv")
-x = data.iloc[:,:-1]
-y = data.iloc[:,-1]
-
-#helper function, shows all different datatypes in dataframe
+#helper function, shows all different datatypes in a dataframe
 def showDatatypes(dataframe):
     dtypes = []
     for columns in dataframe:
@@ -17,20 +12,28 @@ def showDatatypes(dataframe):
     return dtypes
 #print(showDatatypes(x))
 
-#replace NA in continuous data columns with 0
-#replace NA in categorical values with 
-categorical_dtypes = ['O']
-continuous_dtypes = ['int64','float64']
-categorical_columns = []
-continuous_columns = []
-for columns in x:
-    currentdtype = x[columns].dtypes
-    if currentdtype in continuous_dtypes:
-        x[columns] = x[columns].fillna(value=0)
-        continuous_columns.append(columns)
-    else:
-        x[columns] = x[columns].fillna('None')
-        categorical_columns.append(columns)
+#function that returns list contaning names of categorical and continous columns
+#list[0] is categorical data
+#list[1] is continuous data
+def columnCategories(categorical_dtypes, continuous_dtypes, dataframe):
+    column_categories = [[],[]]
+    for columns in dataframe:
+        currentdtype = dataframe[columns].dtypes
+        if currentdtype in continuous_dtypes:
+            column_categories[1].append(columns)
+        else:
+            column_categories[0].append(columns)
+    return column_categories
+
+#function to replace None values with 0 for continuous data
+#replace None values with str 'None' for categorical data
+def replaceNA(categorical_columns, continuous_columns, dataframe):
+    for columns in dataframe:
+        if columns in categorical_columns:
+            dataframe[columns] = dataframe[columns].fillna('None')
+        else:
+            dataframe[columns] = dataframe[columns].fillna(0)
+    return dataframe
         
 #find redundant columns 
 #create dictionary containing unique data and count for each column
@@ -43,43 +46,39 @@ def createColumnDict(columndata):
 
 #check categorical data if there are enough variety of categories
 def checkColumnValidity(columndict):
-    if len(columndict)>2:
+    if len(columndict)>1:
         return True
     return False
 
-#iterate to find redundant categorical columns
-items = x.iteritems()
-acceptedcolumns = []
-droppedcolumns = []
-for label, columndata in items:
-    if checkColumnValidity(createColumnDict(list(columndata))):
-        acceptedcolumns.append(label)
-    else:
-        droppedcolumns.append(label)    
-    
-#dropping redundant columns
-x.drop(droppedcolumns,axis=1,inplace=True)
-print(x)
+#drop redundant columns: see checkColumnValidity ontop
+def dropRedundant(categorical_columns, dataframe):
+    dropped_columns = []
+    for column in categorical_columns:
+        columndata = dataframe[column]
+        if checkColumnValidity(createColumnDict(list(columndata))):
+            continue
+        else:
+            dropped_columns.append(column)    
+    categorical_columns = [i for i in categorical_columns if i not in dropped_columns]
+    dataframe.drop(dropped_columns,axis=1,inplace=True)
+    return dataframe
 
+'''
 
+#polynomial regression: r2 score: , rmse:
+from sklearn.preprocessing import PolynomialFeatures
 
+pf = PolynomialFeatures(degree=3)
+xtrain = pf.fit_transform(xtrain)
+poly_regressor = LinearRegression()
+poly_regressor.fit(xtrain, ytrain["SalePrice"].values)
 
-#one hot encoding
-#from sklearn.preprocessing import OneHotEncoder
-#from sklearn.compose import ColumnTransformer
+#polynomial regression: metrics and predicting values
+poly_xtest = pf.transform(xtest)
+predictions = poly_regressor.predict(xtest)
 
+print(mean_squared_error(ytest["SalePrice"].values, predictions, squared=False))
+print(r2_score(ytest["SalePrice"].values, predictions))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ensemble learning, RandomForest: r2 score: , rmse:
+'''
