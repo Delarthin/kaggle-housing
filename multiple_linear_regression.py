@@ -4,8 +4,6 @@ data = pd.read_csv("csv_files/train.csv")
 x = data.iloc[:,:-1]
 y = data.iloc[:,-1].to_frame()
 
-
-
 #remove ID column from x, insert at column 0 for y
 y.insert(loc=0, column='Id', value=[i for i in x["Id"]])
 x = x.drop(labels='Id',axis=1,inplace=False)
@@ -41,6 +39,11 @@ xtrain[continuous_columns] = ss.fit_transform(xtrain[continuous_columns])
 ct = ColumnTransformer([("ohe",OneHotEncoder(handle_unknown="ignore"),categorical_columns)],remainder="passthrough")
 xtrain = ct.fit_transform(xtrain)
 
+#l1 regularization, linear regression
+from sklearn.linear_model import ElasticNet
+en_regressor = ElasticNet(alpha=0.01,random_state=0)
+en_regressor.fit(xtrain,ytrain["SalePrice"].values)
+
 #multiple linear regression
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
@@ -50,9 +53,19 @@ regressor.fit(xtrain,ytrain["SalePrice"].values)
 from sklearn.metrics import mean_squared_error, r2_score
 xtest[continuous_columns] = ss.transform(xtest[continuous_columns])
 xtest = ct.transform(xtest)
-predictions = regressor.predict(xtest)
+predictions = en_regressor.predict(xtest)
+train_predictions = en_regressor.predict(xtrain)
 print(mean_squared_error(ytest["SalePrice"].values, predictions, squared=False))
 print(r2_score(ytest["SalePrice"].values, predictions))
+print(mean_squared_error(ytrain["SalePrice"].values, train_predictions, squared=False))
+print(r2_score(ytrain["SalePrice"].values, train_predictions))
+
+
+
+
+
+
+
 
 
 

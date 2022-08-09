@@ -41,10 +41,10 @@ xtrain = ct.fit_transform(xtrain)
 
 #transform to poly features
 from sklearn.preprocessing import PolynomialFeatures
-poly = PolynomialFeatures(degree=3)
+poly = PolynomialFeatures(degree=2)
 xtrain = poly.fit_transform(xtrain)
 
-#Polynomial Regression
+#Polynomial Regression, L1 regularization
 from sklearn.linear_model import LinearRegression
 regressor = LinearRegression()
 regressor.fit(xtrain,ytrain["SalePrice"].values)

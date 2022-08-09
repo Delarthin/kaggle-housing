@@ -1,19 +1,54 @@
 Description:
 
-Aim: To predict housing prices using different models. Data taken from Kaggle
+Aim: To predict housing prices using different models. Data taken from Kaggle.
+
+Data Analysis:
+
+Max Price Sold: 755000
+Min Price Sold: 34900
+Mean: 180921.20
+Median: 163000.0
+Standard Deviation(std): 79415.22
+
+Median is lower than the mean. This may mean that data is right skewed.
+
+Z-Score for max price sold is (value-mean)/standard deviation = (755000-180921.20)/79415.22 = 7.23(3.s.f)
+The P-Value is < .00001.
+
+Z-Score for min price sold is (34900-180921.20)/79415.22 = -1.84(3.s.f)
+P-value is 0.0329.
+
+The max price is around 7std away, whilst mean price is only about 2std away from mean.
+
+Thus, it is very clear that max price sold is a far outlier, assuming mean=180921.20
 
 Current models:
 
 Multiple Linear Regression (baseline)
-R-Squared: 0.512, RMSE: 58021
+TRAINING SET: R-Squared: 0.9449698161721017 MAE: 18407.027216528364 
+TEST SET: R-Squared: 0.512, MAE: 58021
 
-Polynomial Regression
-Degree=2: R-Squared: 0.602, RMSE: 52376
--Improvement over Multiple Linear Regression model, to run again on higher degrees
+R-Squared and MAE of traning set is much greater that that of test set, signifying overfitting. Regularization to be applied.
+-TO-DO to run on cv and training sets
+
+Multiple Linear Regression (Elastic Net (L1&L2) Regularization applied)
+Alpha=1:
+TRAINING SET: R-Squared: 0.8633291066177379 MAE: 29008.227270406704
+TEST SET: R-Squared: 0.6982024063456845 MAE: 45652.69872936338
+As observed, difference between R-Squared and MAE have reduced slightly.
+Redundant feature weights are removed to compensate for regularization parameter, reducing overfitting.
+-TO-DO: test values on varying Alphas on a logarithimic scale, and then within an interval select an appropriate Alpha value.
+
+Polynomial Regression (no L1 regularization)
+Degree=2: 
+TEST SET: R-Squared: 0.602, RMSE: 52376
+-Slight improvement over Multiple Linear Regression model
+-TO-DO to run again on higher degrees
+-TO-DO to run on cv and training sets
 
 Random Forest Regressor
-Estimators=100: R-Squared: 34433.355451263946, RMSE: 34433
-Estimators=150: R-Squared: 0.8333082841696381, RMSE: 33928.57173190168
--Very clear improvement over previous models
+TEST SET:Estimators=100: R-Squared: 0.8283113630019089, RMSE: 34433
+TEST SET:Estimators=150: R-Squared: 0.8333082841696381, RMSE: 33928.57173190168
+-Clear improvement over previous models
+-TO-DO to run on cv and training sets
 
-ANN (Artificial Neural Network):

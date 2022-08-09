@@ -6,12 +6,13 @@ import numpy as np
 data = pd.read_csv('csv_files/train.csv')
 sale_prices = data.iloc[:,-1].values
 mean = np.mean(sale_prices)
+median = np.median(sale_prices)
 std = np.std(sale_prices)
 print(max(sale_prices))
 print(min(sale_prices))
 print(mean)
 print(std)
-
+print(median)
 
 import scipy.stats as stats
 import math
